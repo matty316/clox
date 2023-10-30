@@ -1,3 +1,3 @@
 # clox
 
-second project from [crafting interpreters](craftinginterpreters.com)
+second project from [crafting interpreters](https://craftinginterpreters.com)
