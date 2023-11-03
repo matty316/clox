@@ -9,6 +9,7 @@
 #include "vm.h"
 #include "value.h"
 #include "common.h"
+#include "compiler.h"
 #include "debug.h"
 
 VM vm;
@@ -47,7 +48,7 @@ static InterpretResult run(void) {
     
     for(;;) {
 #ifdef DEBUG_TRACE_EXECUTION
-        printf("       ");
+        printf("        ");
         for (Value* slot = vm.stack; slot < vm.stackTop; slot++) {
             printf("[ ");
             printValue(*slot);
@@ -80,8 +81,20 @@ static InterpretResult run(void) {
 #undef BINARY_OP
 }
 
-InterpretResult interpret(Chunk* chunk) {
-    vm.chunk = chunk;
+InterpretResult interpret(const char* source) {
+    Chunk chunk;
+    initChunk(&chunk);
+    
+    if (!compile(source, &chunk)) {
+        freeChunk(&chunk);
+        return INTERPRET_COMPILE_ERROR;
+    }
+    
+    vm.chunk = &chunk;
     vm.ip = vm.chunk->code;
-    return run();
+    
+    InterpretResult result = run();
+    
+    freeChunk(&chunk);
+    return result;
 }
