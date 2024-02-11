@@ -14,6 +14,7 @@ struct Chunk {
 };
 
 void initChunk(struct Chunk *chunk);
+void freeChunk(struct Chunck *chunk);
 void writeChunk(struct Chunk *chunk, uint8_t byte);
 
 #endif
